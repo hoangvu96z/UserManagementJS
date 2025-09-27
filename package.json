@@ -1,0 +1,23 @@
+{
+  "name": "webapp-user-management",
+  "version": "1.0.0",
+  "description": "Web App",
+  "main": "backend/src/app.js",
+  "scripts": {
+    "install:all": "cd backend && npm install && cd ../frontend && pnpm install",
+    "dev:backend": "cd backend && npm run dev",
+    "dev:frontend": "cd frontend && pnpm run dev --host",
+    "build:frontend": "cd frontend && pnpm run build",
+    "start:backend": "cd backend && npm start",
+    "test": "echo \"No tests specified\" && exit 0"
+  },
+  "author": "VuNguyen",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "local"
+  }
+}

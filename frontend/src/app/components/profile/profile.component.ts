@@ -1,0 +1,106 @@
+import { Component, OnInit } from '@angular/core';
+
+import { FormsModule } from '@angular/forms';
+import { Router, RouterModule } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
+import { UserService } from '../../services/user.service';
+import { User, UpdateUserRequest, Country } from '../../models/user.model';
+
+@Component({
+    selector: 'app-profile',
+    imports: [FormsModule, RouterModule],
+    templateUrl: './profile.component.html',
+    styles: []
+})
+export class ProfileComponent implements OnInit {
+  currentUser: User | null = null;
+  countries: Country[] = [];
+  updateData: UpdateUserRequest = {
+    nickname: '',
+    phone: '',
+    country: ''
+  };
+  
+  successMessage = '';
+  errorMessage = '';
+  isLoading = false;
+
+  constructor(
+    private authService: AuthService,
+    private userService: UserService,
+    private router: Router
+  ) {}
+
+  ngOnInit(): void {
+    this.authService.currentUser$.subscribe(user => {
+      this.currentUser = user;
+      if (user) {
+        this.updateData = {
+          nickname: user.nickname,
+          phone: user.phone,
+          country: user.country
+        };
+      }
+    });
+
+    this.loadCountries();
+  }
+
+  loadCountries(): void {
+    this.userService.getCountries().subscribe({
+      next: (countries: any) => {
+        this.countries = countries.map((country: string) => ({
+          name: country,
+          code: country
+        }));
+      },
+      error: (error) => {
+        console.error('Failed to load countries:', error);
+      }
+    });
+  }
+
+  onSubmit(): void {
+    if (this.isLoading) return;
+
+    this.isLoading = true;
+    this.errorMessage = '';
+    this.successMessage = '';
+
+    this.userService.updateUser(this.updateData).subscribe({
+      next: (updatedUser) => {
+        this.successMessage = 'Profile updated successfully!';
+        this.isLoading = false;
+        
+        // Update the current user in auth service
+        this.authService['currentUserSubject'].next(updatedUser);
+      },
+      error: (error) => {
+        this.errorMessage = error.error?.message || 'Failed to update profile. Please try again.';
+        this.isLoading = false;
+      }
+    });
+  }
+
+  logout(): void {
+    this.authService.logout().subscribe({
+      next: () => {
+        this.router.navigate(['/login']);
+      },
+      error: () => {
+        localStorage.removeItem('token');
+        this.router.navigate(['/login']);
+      }
+    });
+  }
+
+  formatDate(dateString: string | undefined): string {
+    if (!dateString) return '';
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+  }
+}
