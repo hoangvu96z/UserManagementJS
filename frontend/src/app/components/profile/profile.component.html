@@ -1,39 +1,39 @@
-<div class="navbar">
-  <div class="navbar-content">
-    <div class="navbar-brand">Web App</div>
-    <div class="navbar-nav">
-      <span style="color: #666;">Welcome, {{ currentUser?.nickname }}</span>
+<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm mb-4">
+  <div class="container-fluid">
+    <a class="navbar-brand fw-bold" href="#">Web App</a>
+    <div class="d-flex align-items-center ms-auto gap-3">
+      <span class="text-secondary">Welcome, {{ currentUser?.nickname }}</span>
       <a routerLink="/dashboard" class="nav-link" routerLinkActive="active">Home</a>
       <a routerLink="/profile" class="nav-link" routerLinkActive="active">Profile Settings</a>
-      <button class="btn btn-secondary" (click)="logout()">Sign Out</button>
+      <button class="btn btn-outline-secondary" (click)="logout()">Sign Out</button>
     </div>
   </div>
-</div>
+</nav>
 
 <div class="container">
-  <div class="dashboard-card">
-    <h2>Profile Settings</h2>
-    <p style="color: #666; margin-bottom: 30px;">
-      Update your personal information. Note: Email address cannot be changed.
-    </p>
+  <div class="card shadow-sm mb-4">
+    <div class="card-body">
+      <h2 class="card-title">Profile Settings</h2>
+      <p class="text-secondary mb-4">
+        Update your personal information. Note: Email address cannot be changed.
+      </p>
 
-    @if (successMessage) {
-      <div class="alert alert-success">
-        {{ successMessage }}
-      </div>
-    }
+      @if (successMessage) {
+        <div class="alert alert-success">
+          {{ successMessage }}
+        </div>
+      }
 
-    @if (errorMessage) {
-      <div class="alert alert-danger">
-        {{ errorMessage }}
-      </div>
-    }
+      @if (errorMessage) {
+        <div class="alert alert-danger">
+          {{ errorMessage }}
+        </div>
+      }
 
-    <form (ngSubmit)="onSubmit()" #profileForm="ngForm">
-      <div class="info-grid">
-        <div>
-          <div class="form-group">
-            <label for="email">Email (Read-only)</label>
+      <form (ngSubmit)="onSubmit()" #profileForm="ngForm">
+        <div class="row mb-3">
+          <div class="col-md-6 mb-3">
+            <label for="email" class="form-label">Email (Read-only)</label>
             <input
               type="email"
               id="email"
@@ -41,104 +41,103 @@
               [value]="currentUser?.email"
               readonly
               style="background-color: #f8f9fa; cursor: not-allowed;"
-              />
-              <div style="font-size: 12px; color: #666; margin-top: 5px;">
-                Email address cannot be changed for security reasons
-              </div>
+            />
+            <div class="form-text text-secondary">
+              Email address cannot be changed for security reasons
             </div>
-
-            <div class="form-group">
-              <label for="phone">Phone *</label>
-              <input
-                type="tel"
-                id="phone"
-                name="phone"
-                class="form-control"
-                [(ngModel)]="updateData.phone"
-                placeholder="Enter your phone number"
-                required
-                pattern="[0-9]{10,15}"
-                #phone="ngModel"
-                />
-                @if (phone.invalid && phone.touched) {
-                  <div class="text-danger">
-                    Valid phone number is required (10-15 digits)
-                  </div>
-                }
+          </div>
+          <div class="col-md-6 mb-3">
+            <label for="phone" class="form-label">Phone *</label>
+            <input
+              type="tel"
+              id="phone"
+              name="phone"
+              class="form-control"
+              [(ngModel)]="updateData.phone"
+              placeholder="Enter your phone number"
+              required
+              pattern="[0-9]{10,15}"
+              #phone="ngModel"
+            />
+            @if (phone.invalid && phone.touched) {
+              <div class="text-danger small mt-1">
+                Valid phone number is required (10-15 digits)
               </div>
-            </div>
-
-            <div>
-              <div class="form-group">
-                <label for="nickname">Nickname *</label>
-                <input
-                  type="text"
-                  id="nickname"
-                  name="nickname"
-                  class="form-control"
-                  [(ngModel)]="updateData.nickname"
-                  placeholder="Enter your nickname"
-                  required
-                  maxlength="40"
-                  #nickname="ngModel"
-                  />
-                  @if (nickname.invalid && nickname.touched) {
-                    <div class="text-danger">
-                      Nickname is required (max 40 characters)
-                    </div>
-                  }
-                </div>
-
-                <div class="form-group">
-                  <label for="country">Country *</label>
-                  <select
-                    id="country"
-                    name="country"
-                    class="form-control"
-                    [(ngModel)]="updateData.country"
-                    required
-                    #country="ngModel"
-                    >
-                    <option value="">Select your country</option>
-                    @for (country of countries; track country) {
-                      <option [value]="country.name">
-                        {{ country.name }}
-                      </option>
-                    }
-                  </select>
-                  @if (country.invalid && country.touched) {
-                    <div class="text-danger">
-                      Country selection is required
-                    </div>
-                  }
-                </div>
-              </div>
-            </div>
-
-            <button
-              type="submit"
-              class="btn btn-primary"
-              [disabled]="profileForm.invalid || isLoading"
-              style="margin-top: 20px;"
-              >
-              {{ isLoading ? 'Saving Changes...' : 'Save Changes' }}
-            </button>
-          </form>
+            }
+          </div>
         </div>
-
-        <div class="dashboard-card" style="margin-top: 30px;">
-          <h3>Account Information</h3>
-          <p>Your current account details</p>
-
-          <div class="info-grid">
-            <div class="info-item">
-              <strong>Account ID</strong>
-              <div style="font-family: monospace; color: #666;">{{ currentUser?.id }}</div>
-            </div>
-            <div class="info-item">
-              <strong>Member Since</strong>
-              <div style="color: #666;">{{ formatDate(currentUser?.createdAt) }}</div>
-            </div>
+        <div class="row mb-3">
+          <div class="col-md-6 mb-3">
+            <label for="nickname" class="form-label">Nickname *</label>
+            <input
+              type="text"
+              id="nickname"
+              name="nickname"
+              class="form-control"
+              [(ngModel)]="updateData.nickname"
+              placeholder="Enter your nickname"
+              required
+              maxlength="40"
+              #nickname="ngModel"
+            />
+            @if (nickname.invalid && nickname.touched) {
+              <div class="text-danger small mt-1">
+                Nickname is required (max 40 characters)
+              </div>
+            }
+          </div>
+          <div class="col-md-6 mb-3">
+            <label for="country" class="form-label">Country *</label>
+            <select
+              id="country"
+              name="country"
+              class="form-select"
+              [(ngModel)]="updateData.country"
+              required
+              #country="ngModel"
+            >
+              <option value="">Select your country</option>
+              @for (country of countries; track country) {
+                <option [value]="country.name">
+                  {{ country.name }}
+                </option>
+              }
+            </select>
+            @if (country.invalid && country.touched) {
+              <div class="text-danger small mt-1">
+                Country selection is required
+              </div>
+            }
+          </div>
+        </div>
+        <button
+          type="submit"
+          class="btn btn-primary"
+          [disabled]="profileForm.invalid || isLoading"
+        >
+          {{ isLoading ? 'Saving Changes...' : 'Save Changes' }}
+        </button>
+      </form>
+    </div>
+  </div>
+  <div class="card shadow-sm">
+    <div class="card-body">
+      <h3 class="card-title">Account Information</h3>
+      <p class="card-text">Your current account details</p>
+      <div class="row">
+        <div class="col-md-6 mb-2">
+          <div class="alert alert-info">
+            <strong>Account ID</strong>
+            <div class="font-monospace text-secondary">{{ currentUser?.id }}</div>
+          </div>
+        </div>
+        <div class="col-md-6 mb-2">
+          <div class="alert alert-info">
+            <strong>Member Since</strong>
+            <div class="text-secondary">{{ formatDate(currentUser?.createdAt) }}</div>
           </div>
         </div>
       </div>
+    </div>
+  </div>
+</div>

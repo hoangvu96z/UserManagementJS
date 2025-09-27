@@ -12,7 +12,7 @@ export interface AutocompleteItem {
   standalone: true,
   imports: [CommonModule, FormsModule],
   template: `
-    <div class="autocomplete-root">
+    <div class="position-relative">
       <input
         [attr.name]="name"
         [placeholder]="placeholder"
@@ -25,45 +25,20 @@ export interface AutocompleteItem {
         [disabled]="disabled"
         autocomplete="off"
       />
-
-      <div *ngIf="showList" class="autocomplete-list" role="listbox">
-        <div *ngIf="filtered.length === 0" class="autocomplete-empty">No matches</div>
-        <div *ngFor="let it of filtered; let i = index"
-             class="autocomplete-item"
-             [class.highlight]="i === highlightedIndex"
-             role="option"
-             (mousedown)="select(it)"
-             (mouseover)="highlightedIndex = i">
+      <div *ngIf="showList" class="dropdown-menu show w-100 mt-1 p-0" style="max-height:220px;overflow-y:auto;">
+        <div *ngIf="filtered.length === 0" class="dropdown-item text-muted">No matches</div>
+        <button type="button" *ngFor="let it of filtered; let i = index"
+                class="dropdown-item" [class.active]="i === highlightedIndex"
+                role="option"
+                (mousedown)="select(it)"
+                (mouseover)="highlightedIndex = i">
           {{ it.name }}
-        </div>
+        </button>
       </div>
     </div>
   `,
   styles: [
-    `:host{display:block}
-     .autocomplete-root{position:relative}
-     .autocomplete-list{
-       position:absolute;
-       z-index:1200;
-       width:100%;
-       max-height:220px;
-       overflow-y:auto;
-       background:#fff;
-       border:1px solid rgba(0,0,0,0.12);
-       box-shadow:0 6px 12px rgba(0,0,0,0.08);
-       border-radius:4px;
-       margin-top:4px;
-     }
-     .autocomplete-item{
-       padding:8px 12px;
-       cursor:pointer;
-       border-bottom:1px solid rgba(0,0,0,0.04);
-       white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
-     }
-     .autocomplete-item:last-child{border-bottom:none}
-     .autocomplete-item:hover, .autocomplete-item.highlight{background:#f1f5ff}
-     .autocomplete-empty{padding:8px 12px; color:#666}
-    `
+    ``
   ],
   providers: [
     {

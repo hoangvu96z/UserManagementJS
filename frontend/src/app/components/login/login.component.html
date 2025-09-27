@@ -1,80 +1,86 @@
-<div class="container">
-  <div class="card">
-    <h2 class="text-center">Welcome Back</h2>
-    <p class="text-center" style="color: #666; margin-bottom: 30px;">
-      Sign in to your account to continue
-    </p>
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6 col-lg-5">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <h2 class="text-center mb-3">Welcome Back</h2>
+          <p class="text-center text-secondary mb-4">
+            Sign in to your account to continue
+          </p>
 
-    @if (errorMessage) {
-      <div class="alert alert-danger">
-        {{ errorMessage }}
-      </div>
-    }
-
-    <form (ngSubmit)="onSubmit()" #loginForm="ngForm">
-      <div class="form-group">
-        <label for="username">Username or Email</label>
-        <input
-          type="text"
-          id="username"
-          name="username"
-          class="form-control"
-          [(ngModel)]="credentials.username"
-          placeholder="Enter your username or email"
-          required
-          #username="ngModel"
-          />
-          @if (username.invalid && username.touched) {
-            <div class="text-danger">
-              Username or email is required
+          @if (errorMessage) {
+            <div class="alert alert-danger">
+              {{ errorMessage }}
             </div>
           }
-        </div>
 
-        <div class="form-group">
-          <label for="password">Password</label>
-          <input
-            type="password"
-            id="password"
-            name="password"
-            class="form-control"
-            [(ngModel)]="credentials.password"
-            placeholder="Enter your password"
-            required
-            #password="ngModel"
-            />
-            @if (password.invalid && password.touched) {
-              <div class="text-danger">
-                Password is required
-              </div>
-            }
-          </div>
+          <form (ngSubmit)="onSubmit()" #loginForm="ngForm">
+            <div class="mb-3">
+              <label for="username" class="form-label">Username or Email</label>
+              <input
+                type="text"
+                id="username"
+                name="username"
+                class="form-control"
+                [(ngModel)]="credentials.username"
+                placeholder="Enter your username or email"
+                required
+                #username="ngModel"
+              />
+              @if (username.invalid && username.touched) {
+                <div class="text-danger small mt-1">
+                  Username or email is required
+                </div>
+              }
+            </div>
 
-          <div class="form-group">
-            <label>
+            <div class="mb-3">
+              <label for="password" class="form-label">Password</label>
+              <input
+                type="password"
+                id="password"
+                name="password"
+                class="form-control"
+                [(ngModel)]="credentials.password"
+                placeholder="Enter your password"
+                required
+                #password="ngModel"
+              />
+              @if (password.invalid && password.touched) {
+                <div class="text-danger small mt-1">
+                  Password is required
+                </div>
+              }
+            </div>
+
+            <div class="form-check mb-3">
               <input
                 type="checkbox"
+                class="form-check-input"
+                id="rememberMe"
                 [(ngModel)]="credentials.rememberMe"
                 name="rememberMe"
-                />
-                Remember me
-              </label>
+              />
+              <label class="form-check-label" for="rememberMe">Remember me</label>
             </div>
 
             <button
               type="submit"
-              class="btn btn-primary btn-block"
+              class="btn btn-primary w-100"
               [disabled]="loginForm.invalid || isLoading"
-              >
+            >
               {{ isLoading ? 'Signing in...' : 'Sign In' }}
             </button>
           </form>
 
-          <div class="text-center" style="margin-top: 20px;">
+          <div class="text-center mt-4">
             Don't have an account?
-            <a routerLink="/register" style="color: #667eea; text-decoration: none;">
+            <a routerLink="/register" class="text-primary text-decoration-none">
               Sign up here
             </a>
           </div>
         </div>
       </div>
+    </div>
+  </div>
+</div>
