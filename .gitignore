@@ -53,3 +53,5 @@ Thumbs.db
 # Angular cache
 frontend/.angular/
 frontend/.angular/cache/
+frontend/dist/
+frontend/out-tsc/

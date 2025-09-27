@@ -6,10 +6,12 @@ import { AuthService } from '../../services/auth.service';
 import { UserService } from '../../services/user.service';
 import { User, UpdateUserRequest, Country } from '../../models/user.model';
 import { HeaderComponent } from '../header/header.component';
+import { AutocompleteComponent } from 'src/app/shared/autocomplete/autocomplete.component';
+import { FooterComponent } from '../footer/footer.component';
 
 @Component({
     selector: 'app-profile',
-    imports: [FormsModule, RouterModule, HeaderComponent],
+    imports: [FormsModule, RouterModule, HeaderComponent, FooterComponent, AutocompleteComponent],
     templateUrl: './profile.component.html',
     styles: []
 })

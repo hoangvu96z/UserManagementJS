@@ -1,49 +1,21 @@
 import { Component, OnInit } from '@angular/core';
 
 import { AutocompleteComponent } from '../../shared/autocomplete/autocomplete.component';
+import { ToastComponent } from '../../shared/toast/toast.component';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { UserService } from '../../services/user.service';
 import { RegisterRequest, Country } from '../../models/user.model';
+import { APP_CONSTANT, MESSAGE_CONSTANT } from 'src/app/constant/app-constant';
+import { ToastOption } from 'src/app/shared/toast/toast-option.model';
 
 
 @Component({
     selector: 'app-register',
-    imports: [FormsModule, RouterModule, AutocompleteComponent],
+  imports: [FormsModule, RouterModule, AutocompleteComponent, ToastComponent],
     templateUrl: './register.component.html',
-    styles: [
-      `:host { display: block; }
-       .autocomplete-list {
-         position: absolute;
-         z-index: 1200;
-         width: 100%;
-         max-height: 220px;
-         overflow-y: auto;
-         background: #fff;
-         border: 1px solid rgba(0,0,0,0.12);
-         box-shadow: 0 6px 12px rgba(0,0,0,0.08);
-         border-radius: 4px;
-         margin-top: 4px;
-       }
-       .autocomplete-item {
-         padding: 8px 12px;
-         cursor: pointer;
-         border-bottom: 1px solid rgba(0,0,0,0.04);
-         white-space: nowrap;
-         overflow: hidden;
-         text-overflow: ellipsis;
-       }
-       .autocomplete-item:last-child { border-bottom: none; }
-       .autocomplete-item:hover, .autocomplete-item.highlight {
-         background: #f1f5ff;
-       }
-       .autocomplete-empty {
-         padding: 8px 12px;
-         color: #666;
-       }
-      `
-    ]
+    styleUrls: ['./register.component.css']
 })
 export class RegisterComponent implements OnInit {
   userData: RegisterRequest = {
@@ -62,6 +34,8 @@ export class RegisterComponent implements OnInit {
   highlightedIndex = -1;
   errorMessage = '';
   isLoading = false;
+  showToast = false;
+  toastOption : ToastOption = { type: 'info', message: '', duration: 1000 };
 
   constructor(
     private authService: AuthService,
@@ -76,12 +50,10 @@ export class RegisterComponent implements OnInit {
   loadCountries(): void {
     this.userService.getCountries().subscribe({
       next: (countries: any) => {
-        // Convert string array to Country objects
         this.countries = countries.map((country: string) => ({
           name: country,
           code: country
         }));
-        // initialize filtered list
         this.filteredCountries = this.countries.slice();
       },
       error: (error) => {
@@ -167,10 +139,19 @@ export class RegisterComponent implements OnInit {
 
     this.authService.register(this.userData).subscribe({
       next: () => {
-        this.router.navigate(['/dashboard']);
+        this.showToast = true;
+        this.toastOption = { type: 'success', message: MESSAGE_CONSTANT.REGISTER_SUCCESS, duration: 1000 };
+        setTimeout(() => {
+          this.router.navigate(['/dashboard']);
+        }, APP_CONSTANT.TIME_NAVIGATION);
       },
       error: (error) => {
-        this.errorMessage = error.error?.message || 'Registration failed. Please try again.';
+        this.showToast = true;
+        this.errorMessage = error.error?.error || error.error?.message || MESSAGE_CONSTANT.REGISTER_FAILURE;
+        this.toastOption = { type: 'danger', message: this.errorMessage, duration: 1000 };
+        setTimeout(() => {
+          this.showToast = false;
+        }, APP_CONSTANT.TIME_NAVIGATION);
         this.isLoading = false;
       }
     });

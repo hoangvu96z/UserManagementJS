@@ -24,7 +24,7 @@
         <div class="col-md-6 mb-2">
           <div class="card h-100 shadow-sm">
             <div class="card-body">
-              <div class="alert alert-success mb-0">Account Status</div>
+              <div class="alert alert-success mb-0">Account Status: <span class="text-success fw-bold">{{ currentUser?.createdAt ? 'Active' : 'Inactive' }}</span></div>
             </div>
           </div>
         </div>
@@ -34,7 +34,6 @@
         <div class="col-md-6">
           <div class="card dashboard-card mt-1">
             <div class="card-body">
-              <h3 class="card-title">Account Information</h3>
               <p>Your current account details</p>
               <div class="info-grid">
                 <div class="info-item">
@@ -81,4 +80,5 @@
     </div>
   </div>
 
+  <app-footer></app-footer>
 </div>

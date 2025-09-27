@@ -83,21 +83,14 @@
           </div>
           <div class="col-md-6 mb-3">
             <label for="country" class="form-label">Country *</label>
-            <select
-              id="country"
+            <app-autocomplete
+              [items]="countries"
               name="country"
-              class="form-select"
+              placeholder="Start typing to search your country"
               [(ngModel)]="updateData.country"
               required
-              #country="ngModel"
-            >
-              <option value="">Select your country</option>
-              @for (country of countries; track country) {
-                <option [value]="country.name">
-                  {{ country.name }}
-                </option>
-              }
-            </select>
+              #country="ngModel">
+            </app-autocomplete>
             @if (country.invalid && country.touched) {
               <div class="text-danger small mt-1">
                 Country selection is required
@@ -135,4 +128,5 @@
       </div>
     </div>
   </div>
+  <app-footer></app-footer>
 </div>

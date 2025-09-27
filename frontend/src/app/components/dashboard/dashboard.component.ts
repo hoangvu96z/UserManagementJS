@@ -4,10 +4,11 @@ import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { User } from '../../models/user.model';
 import { HeaderComponent } from '../header/header.component';
+import { FooterComponent } from '../footer/footer.component';
 
 @Component({
     selector: 'app-dashboard',
-    imports: [RouterModule, HeaderComponent],
+    imports: [RouterModule, HeaderComponent, FooterComponent],
     templateUrl: './dashboard.component.html',
     styles: []
 })

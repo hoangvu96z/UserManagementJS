@@ -1,8 +1,10 @@
 export const APP_CONSTANT = {
   API_BASE_URL: 'http://localhost:3000/api',
   TOKEN_KEY: 'auth_token',
-    REFRESH_TOKEN: 'refresh_token'
+  REFRESH_TOKEN: 'refresh_token',
+  TIME_NAVIGATION: 1000 
 };
+
 
 export const MESSAGE_CONSTANT = {
   LOGIN_SUCCESS: 'Login successful!',

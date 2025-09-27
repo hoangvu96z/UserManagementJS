@@ -14,7 +14,9 @@ export class AuthService {
   public currentUser$ = this.currentUserSubject.asObservable();
 
   constructor(private http: HttpClient) {
-   
+    if (this.isAuthenticated()) {
+      this.loadCurrentUser();
+    }
   }
 
   login(credentials: LoginRequest): Observable<AuthResponse> {
