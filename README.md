@@ -1,7 +1,9 @@
 
 # User Management System
 
-This is a Single Page Application (SPA) built with Angular (frontend) and Node.js/Express (backend). It provides user registration, login, profile management, and logout functionalities.
+This is a Single Page Application (SPA) built with Angular (frontend) and Node.js/Express (backend).
+This project use for CODIX Interview test
+It was made by VU NGUYEN  | Email : hoangvu96z@gmail.com
 
 
 ## 🚀 Features
@@ -48,15 +50,11 @@ This is a Single Page Application (SPA) built with Angular (frontend) and Node.j
 - **dotenv** - Environment variable management
 - **nodemon** - Auto-restart server for development
 
-### Data Storage
-- **JSON File** - Simple storage in `users.json`
-
-
 ## 🚀 Getting Started
 
 ### Prerequisites
 - Node.js 18+
-- npm or pnpm
+- NPM
 
 
 ### 1. Install Backend
@@ -117,24 +115,3 @@ Frontend runs at: http://localhost:4200
    - Smooth transitions and animations
    - Password visibility toggle
    - Country dropdown with search
-
-
-## 🚀 Deployment
-
-### Development
-```bash
-# Backend
-cd backend && npm run dev
-
-# Frontend
-cd frontend && npm run start
-```
-
-### Production
-```bash
-# Build frontend
-cd frontend && npm run build
-
-# Start backend
-cd backend && npm start
-```
