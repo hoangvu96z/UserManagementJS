@@ -1,22 +1,20 @@
+
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { User, LoginRequest, RegisterRequest, AuthResponse } from '../models/user.model';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl = 'http://localhost:3000/api';
+  private apiUrl = environment.apiUrl;
   private currentUserSubject = new BehaviorSubject<User | null>(null);
   public currentUser$ = this.currentUserSubject.asObservable();
 
   constructor(private http: HttpClient) {
-    // Check if user is already logged in
-    const token = localStorage.getItem('token');
-    if (token) {
-      this.loadCurrentUser();
-    }
+   
   }
 
   login(credentials: LoginRequest): Observable<AuthResponse> {
@@ -43,17 +41,23 @@ export class AuthService {
     return this.http.post(`${this.apiUrl}/logout`, {})
       .pipe(
         tap(() => {
+          console.log('User logged out');
+          
           localStorage.removeItem('token');
           this.currentUserSubject.next(null);
         })
       );
   }
 
-  private loadCurrentUser(): void {
+  public loadCurrentUser(): void {
     this.http.get<User>(`${this.apiUrl}/user`)
       .subscribe({
         next: (user) => this.currentUserSubject.next(user),
-        error: () => {
+        error: (error) => {
+          console.log(error);
+          
+          console.log('Failed to load current user, logging out.');
+          
           localStorage.removeItem('token');
           this.currentUserSubject.next(null);
         }

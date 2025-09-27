@@ -3,10 +3,11 @@ import { Component, OnInit } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { User } from '../../models/user.model';
+import { HeaderComponent } from '../header/header.component';
 
 @Component({
     selector: 'app-dashboard',
-    imports: [RouterModule],
+    imports: [RouterModule, HeaderComponent],
     templateUrl: './dashboard.component.html',
     styles: []
 })
@@ -30,7 +31,7 @@ export class DashboardComponent implements OnInit {
         this.router.navigate(['/login']);
       },
       error: () => {
-        // Even if logout fails on server, clear local storage
+        console.log('Logout failed, clearing local session.');
         localStorage.removeItem('token');
         this.router.navigate(['/login']);
       }

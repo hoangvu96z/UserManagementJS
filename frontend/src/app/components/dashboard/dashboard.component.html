@@ -1,12 +1,7 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm mb-4">
   <div class="container-fluid">
     <a class="navbar-brand fw-bold" href="#">Web App</a>
-    <div class="d-flex align-items-center ms-auto gap-3">
-      <span class="text-secondary">Welcome, {{ currentUser?.nickname }}</span>
-      <a routerLink="/dashboard" class="nav-link" routerLinkActive="active">Home</a>
-      <a routerLink="/profile" class="nav-link" routerLinkActive="active">Profile Settings</a>
-      <button class="btn btn-outline-secondary" (click)="logout()">Sign Out</button>
-    </div>
+    <app-header [currentUser]="currentUser" (logoutEvent)="logout()"></app-header>
   </div>
 </nav>
 
@@ -20,73 +15,70 @@
 
       <div class="row mb-3">
         <div class="col-md-6 mb-2">
-          <div class="alert alert-primary">Account Information</div>
+          <div class="card h-100 shadow-sm">
+            <div class="card-body">
+              <div class="alert alert-primary mb-0">Account Information</div>
+            </div>
+          </div>
         </div>
         <div class="col-md-6 mb-2">
-          <div class="alert alert-success">Account Status</div>
+          <div class="card h-100 shadow-sm">
+            <div class="card-body">
+              <div class="alert alert-success mb-0">Account Status</div>
+            </div>
+          </div>
         </div>
       </div>
 
       <div class="row mb-4">
         <div class="col-md-6">
-          <ul class="list-group mb-3">
-            <li class="list-group-item"><strong>Nickname:</strong> {{ currentUser?.nickname }}</li>
-            <li class="list-group-item"><strong>Email:</strong> {{ currentUser?.email }}</li>
-            <li class="list-group-item"><strong>Phone:</strong> {{ currentUser?.phone }}</li>
-            <li class="list-group-item"><strong>Country:</strong> {{ currentUser?.country }}</li>
-          </ul>
-        </div>
-        <div class="col-md-6">
-          <div class="alert alert-success">
-            <strong class="text-success">Active Account</strong>
-            <div class="small text-secondary mt-2">
-              Your account is active and all features are available.
+          <div class="card dashboard-card mt-1">
+            <div class="card-body">
+              <h3 class="card-title">Account Information</h3>
+              <p>Your current account details</p>
+              <div class="info-grid">
+                <div class="info-item">
+                  <strong>Account ID</strong>
+                  <div style="font-family: monospace; color: #666;">{{ currentUser?.id }}</div>
+                </div>
+                <div class="info-item">
+                  <strong>Member Since</strong>
+                  <div style="color: #666;">{{ formatDate(currentUser?.createdAt) }}</div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+        <div class="col-md-6">
+          <div class="row g-4">
+            <div class="col-md-6">
+              <div class="card h-100 shadow-sm">
+                <div class="card-body">
+                  <h3 class="card-title">Quick Actions</h3>
+                  <p class="card-text">Common tasks you can perform</p>
+                  <a routerLink="/profile" class="btn btn-primary">Update Profile</a>
+                  <div style="margin-top: 10px; font-size: 14px; color: #666;">
+                    Change your personal information
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="card h-100 shadow-sm">
+                <div class="card-body">
+                  <h3 class="card-title">Account Security</h3>
+                  <p class="card-text">Manage your account security</p>
+                  <button class="btn btn-danger" (click)="logout()">Sign Out</button>
+                  <div style="margin-top: 10px; font-size: 14px; color: #666;">
+                    Securely log out of your account
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
     </div>
   </div>
 
-  <div class="row g-4">
-    <div class="col-md-6">
-      <div class="card h-100 shadow-sm">
-        <div class="card-body">
-          <h3 class="card-title">Quick Actions</h3>
-          <p class="card-text">Common tasks you can perform</p>
-          <a routerLink="/profile" class="btn btn-primary">
-            Update Profile
-      </a>
-      <div style="margin-top: 10px; font-size: 14px; color: #666;">
-        Change your personal information
-      </div>
-    </div>
-
-    <div class="dashboard-card">
-      <h3>Account Security</h3>
-      <p>Manage your account security</p>
-      <button class="btn btn-danger" (click)="logout()">
-        Sign Out
-      </button>
-      <div style="margin-top: 10px; font-size: 14px; color: #666;">
-        Securely log out of your account
-      </div>
-    </div>
-  </div>
-
-  <div class="dashboard-card" style="margin-top: 30px;">
-    <h3>Account Information</h3>
-    <p>Your current account details</p>
-
-    <div class="info-grid">
-      <div class="info-item">
-        <strong>Account ID</strong>
-        <div style="font-family: monospace; color: #666;">{{ currentUser?.id }}</div>
-      </div>
-      <div class="info-item">
-        <strong>Member Since</strong>
-        <div style="color: #666;">{{ formatDate(currentUser?.createdAt) }}</div>
-      </div>
-    </div>
-  </div>
 </div>

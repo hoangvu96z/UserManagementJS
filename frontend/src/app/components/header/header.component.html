@@ -1,0 +1,6 @@
+<div class="d-flex align-items-center ms-auto gap-3">
+  <span class="text-secondary">Welcome, {{ currentUser?.nickname }}</span>
+  <a routerLink="/dashboard" class="nav-link" routerLinkActive="active font-weight-bold" [routerLinkActiveOptions]="{ exact: true }">Home</a>
+  <a routerLink="/profile" class="nav-link" routerLinkActive="active font-weight-bold" [routerLinkActiveOptions]="{ exact: true }">Profile Settings</a>
+  <button class="btn btn-outline-secondary" (click)="logout()">Sign Out</button>
+</div>

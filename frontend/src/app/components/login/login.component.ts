@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
@@ -11,21 +11,29 @@ import { LoginRequest } from '../../models/user.model';
     templateUrl: './login.component.html',
     styles: []
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
   credentials: LoginRequest = {
     username: '',
     password: '',
     rememberMe: false
   };
+
+
   
   errorMessage = '';
   isLoading = false;
-
+  private authService: AuthService = inject(AuthService);
   constructor(
-    private authService: AuthService,
     private router: Router
   ) {}
-
+  
+  ngOnInit(): void {
+    // Check if user is already logged in
+    const token = localStorage.getItem('token');
+    if (token) {
+      this.authService.loadCurrentUser();
+    }
+  }
   onSubmit(): void {
     if (this.isLoading) return;
 
@@ -33,7 +41,8 @@ export class LoginComponent {
     this.errorMessage = '';
 
     this.authService.login(this.credentials).subscribe({
-      next: () => {
+      next: (response) => {
+        console.log('Login response:', response);
         this.router.navigate(['/dashboard']);
       },
       error: (error) => {

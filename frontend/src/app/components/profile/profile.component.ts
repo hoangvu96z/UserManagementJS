@@ -1,14 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { UserService } from '../../services/user.service';
 import { User, UpdateUserRequest, Country } from '../../models/user.model';
+import { HeaderComponent } from '../header/header.component';
 
 @Component({
     selector: 'app-profile',
-    imports: [FormsModule, RouterModule],
+    imports: [FormsModule, RouterModule, HeaderComponent],
     templateUrl: './profile.component.html',
     styles: []
 })
@@ -24,12 +25,11 @@ export class ProfileComponent implements OnInit {
   successMessage = '';
   errorMessage = '';
   isLoading = false;
+  private readonly authService: AuthService = inject(AuthService);
+  private readonly userService: UserService = inject(UserService);
+  private readonly router: Router = inject(Router);
 
-  constructor(
-    private authService: AuthService,
-    private userService: UserService,
-    private router: Router
-  ) {}
+  constructor() {}
 
   ngOnInit(): void {
     this.authService.currentUser$.subscribe(user => {
@@ -68,12 +68,10 @@ export class ProfileComponent implements OnInit {
     this.successMessage = '';
 
     this.userService.updateUser(this.updateData).subscribe({
-      next: (updatedUser) => {
+      next: () => {
         this.successMessage = 'Profile updated successfully!';
+        this.authService.loadCurrentUser?.();
         this.isLoading = false;
-        
-        // Update the current user in auth service
-        this.authService['currentUserSubject'].next(updatedUser);
       },
       error: (error) => {
         this.errorMessage = error.error?.message || 'Failed to update profile. Please try again.';
@@ -88,6 +86,8 @@ export class ProfileComponent implements OnInit {
         this.router.navigate(['/login']);
       },
       error: () => {
+        console.log('Logout failed, clearing local session.');
+        
         localStorage.removeItem('token');
         this.router.navigate(['/login']);
       }
