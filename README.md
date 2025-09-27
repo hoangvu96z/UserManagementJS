@@ -1,203 +1,140 @@
-# Web App - Hệ thống quản lý người dùng
 
-Ứng dụng web đơn trang (SPA) được xây dựng với React frontend và Node.js backend, cung cấp các chức năng đăng ký, đăng nhập, quản lý thông tin người dùng và đăng xuất.
+# User Management System
 
-## 🚀 Tính năng
+This is a Single Page Application (SPA) built with Angular (frontend) and Node.js/Express (backend). It provides user registration, login, profile management, and logout functionalities.
 
-### ✅ Các chức năng đã hoàn thành theo yêu cầu:
 
-1. **Đăng ký tài khoản**
-   - Nickname (varchar 40, duy nhất)
-   - Password (varchar 40)
-   - Confirm password (varchar 40)
-   - Email (varchar 40, duy nhất)
-   - Phone (numeric 15)
-   - Country (dropdown danh sách định sẵn)
-   - Validation phía frontend và backend
-   - Tự động đăng nhập sau khi đăng ký thành công
+## 🚀 Features
 
-2. **Đăng nhập**
-   - Username hoặc Email
+### ✅ Main Functions
+
+1. **User Registration**
+   - Nickname (unique, max 40 chars)
+   - Password & Confirm Password
+   - Email (unique, max 40 chars)
+   - Phone (up to 15 digits)
+   - Country (select from list)
+   - Frontend & backend validation
+   - Auto-login after successful registration
+
+2. **Login**
+   - Username or Email
    - Password
    - Remember me (checkbox)
-   - Xác thực JWT
+   - JWT authentication
 
-3. **Quản lý thông tin người dùng**
-   - Xem thông tin cá nhân
-   - Cập nhật nickname, phone, country
-   - Email không thể thay đổi (theo yêu cầu bảo mật)
-   - Kiểm tra tính duy nhất của nickname
+3. **User Profile Management**
+   - View personal information
+   - Update nickname, phone, country
+   - Email cannot be changed (for security)
+   - Nickname uniqueness check
 
-4. **Đăng xuất**
-   - Xóa token và chuyển hướng về trang đăng nhập
+4. **Logout**
+   - Remove token and redirect to login page
 
-## 🛠 Công nghệ sử dụng
 
-### Frontend (React)
-- **React 19.1.0** - Framework JavaScript hiện đại
-- **Tailwind CSS** - Framework CSS utility-first
-- **shadcn/ui** - Thư viện component UI chất lượng cao
-- **Lucide Icons** - Bộ icon đẹp và nhất quán
-- **Axios** - HTTP client để gọi API
-- **Vite** - Build tool nhanh và hiện đại
+## 🛠 Technologies Used
+
+### Frontend (Angular)
+- **Angular 19** - Modern JavaScript framework
+- **RxJS** - Reactive programming
+- **TypeScript** - Type safety
 
 ### Backend (Node.js)
-- **Express.js** - Web framework cho Node.js
-- **bcryptjs** - Mã hóa mật khẩu
-- **jsonwebtoken** - Xác thực JWT
-- **cors** - Xử lý Cross-Origin Resource Sharing
-- **dotenv** - Quản lý biến môi trường
-- **nodemon** - Auto-restart server khi phát triển
+- **Express.js** - Web framework for Node.js
+- **bcryptjs** - Password hashing
+- **jsonwebtoken** - JWT authentication
+- **cors** - Cross-Origin Resource Sharing
+- **dotenv** - Environment variable management
+- **nodemon** - Auto-restart server for development
 
-### Lưu trữ dữ liệu
-- **JSON File** - Lưu trữ đơn giản trong file `users.json`
+### Data Storage
+- **JSON File** - Simple storage in `users.json`
 
-## 📁 Cấu trúc dự án
 
-```
-webapp-project/
-├── backend/                 # Node.js Backend
-│   ├── src/
-│   │   ├── controllers/     # Logic xử lý request
-│   │   ├── models/          # Data models
-│   │   ├── routes/          # API routes
-│   │   ├── services/        # Business logic
-│   │   ├── utils/           # Utilities (JWT, auth middleware)
-│   │   └── app.js           # Main application file
-│   ├── data/
-│   │   ├── users.json       # User data storage
-│   │   └── countries.json   # Countries list
-│   ├── package.json
-│   └── .env                 # Environment variables
-├── frontend/                # React Frontend
-│   ├── src/
-│   │   ├── components/      # React components
-│   │   ├── contexts/        # React contexts (Auth)
-│   │   ├── services/        # API services
-│   │   ├── App.jsx          # Main App component
-│   │   └── main.jsx         # Entry point
-│   ├── package.json
-│   └── index.html
-└── README.md
-```
+## 🚀 Getting Started
 
-## 🚀 Hướng dẫn cài đặt và chạy
+### Prerequisites
+- Node.js 18+
+- npm or pnpm
 
-### Yêu cầu hệ thống
-- Node.js 18+ 
-- npm hoặc pnpm
 
-### 1. Cài đặt Backend
+### 1. Install Backend
 
 ```bash
 cd backend
 npm install
 ```
 
-### 2. Cài đặt Frontend
+### 2. Install Frontend
 
 ```bash
 cd frontend
-pnpm install
+pnpm install # or npm install
 ```
 
-### 3. Chạy ứng dụng
+### 3. Run the Application
 
-**Chạy Backend (Terminal 1):**
+**Start Backend (Terminal 1):**
 ```bash
 cd backend
 npm run dev
 ```
-Backend sẽ chạy tại: http://localhost:3000
+Backend runs at: http://localhost:3000
 
-**Chạy Frontend (Terminal 2):**
+**Start Frontend (Terminal 2):**
 ```bash
 cd frontend
-pnpm run dev --host
+npm run start
 ```
-Frontend sẽ chạy tại: http://localhost:5173
+Frontend runs at: http://localhost:4200
+
 
 ## 🔧 API Endpoints
 
 ### Authentication
-- `POST /api/register` - Đăng ký tài khoản mới
-- `POST /api/login` - Đăng nhập
-- `POST /api/logout` - Đăng xuất
+- `POST /api/register` - Register a new account
+- `POST /api/login` - Login
+- `POST /api/logout` - Logout
 
 ### User Management
-- `GET /api/user` - Lấy thông tin người dùng (yêu cầu token)
-- `PUT /api/user` - Cập nhật thông tin người dùng (yêu cầu token)
+- `GET /api/user` - Get user info (requires token)
+- `PUT /api/user` - Update user info (requires token)
 
 ### Utilities
-- `GET /api/countries` - Lấy danh sách quốc gia
+- `GET /api/countries` - Get country list
 - `GET /api/health` - Health check
 
-## 🔐 Bảo mật
 
-- **Mã hóa mật khẩu**: Sử dụng bcryptjs với salt rounds = 10
-- **JWT Authentication**: Token có thời hạn 24 giờ
-- **CORS**: Được cấu hình để cho phép cross-origin requests
-- **Validation**: Kiểm tra dữ liệu đầu vào ở cả frontend và backend
-- **Email bảo mật**: Email không thể thay đổi sau khi tạo tài khoản
+## 🎨 User Interface
 
-## 🎨 Giao diện người dùng
+- **Responsive Design**: Works well on desktop and mobile
+- **Modern UI**: Built with Angular components
+- **User Experience**:
+   - Loading states
+   - Clear error messages
+   - Real-time form validation
+   - Smooth transitions and animations
+   - Password visibility toggle
+   - Country dropdown with search
 
-- **Responsive Design**: Hoạt động tốt trên desktop và mobile
-- **Modern UI**: Sử dụng Tailwind CSS và shadcn/ui components
-- **User Experience**: 
-  - Loading states
-  - Error handling với thông báo rõ ràng
-  - Form validation real-time
-  - Smooth transitions và animations
-  - Password visibility toggle
-  - Country dropdown với search
 
-## ✅ Kiểm tra chức năng
-
-Ứng dụng đã được kiểm tra đầy đủ các chức năng:
-
-1. ✅ Đăng ký tài khoản với validation đầy đủ
-2. ✅ Tự động đăng nhập sau khi đăng ký
-3. ✅ Đăng nhập với email/username và password
-4. ✅ Dashboard hiển thị thông tin người dùng
-5. ✅ Cập nhật thông tin cá nhân (trừ email)
-6. ✅ Đăng xuất và chuyển hướng về trang đăng nhập
-7. ✅ Kiểm tra tính duy nhất của nickname và email
-8. ✅ Validation form phía frontend
-9. ✅ Error handling và thông báo lỗi
-10. ✅ Responsive design
-
-## 🚀 Triển khai
+## 🚀 Deployment
 
 ### Development
 ```bash
 # Backend
 cd backend && npm run dev
 
-# Frontend  
-cd frontend && pnpm run dev --host
+# Frontend
+cd frontend && npm run start
 ```
 
 ### Production
 ```bash
 # Build frontend
-cd frontend && pnpm run build
+cd frontend && npm run build
 
 # Start backend
 cd backend && npm start
 ```
-
-## 📝 Ghi chú
-
-- Ứng dụng sử dụng file JSON để lưu trữ dữ liệu, phù hợp cho demo và development
-- Trong production, nên chuyển sang database như MongoDB hoặc PostgreSQL
-- JWT secret key nên được thay đổi trong production
-- Có thể mở rộng thêm các tính năng như reset password, email verification, etc.
-
-## 🤝 Đóng góp
-
-Dự án này được tạo theo yêu cầu cụ thể. Mọi đóng góp và cải tiến đều được hoan nghênh.
-
-## 📄 License
-
-MIT License
