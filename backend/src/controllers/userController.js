@@ -54,7 +54,19 @@ const updateProfile = async (req, res) => {
   }
 };
 
+// WARNING: This API is for demo purposes only.
+const deleteAllUsers = async (req, res) => {
+  try {
+    await userService.deleteAllUsers();
+    res.json({ message: 'All users deleted successfully' });
+  } catch (error) {
+    console.error('Delete all users error:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
 module.exports = {
   getProfile,
-  updateProfile
+  updateProfile,
+  deleteAllUsers
 };

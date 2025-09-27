@@ -1,4 +1,6 @@
-require('dotenv').config();
+require('dotenv').config({
+  path: process.env.NODE_ENV === 'production' ? '.env.production' : '.env'
+});
 const express = require('express');
 const cors = require('cors');
 
@@ -9,9 +11,14 @@ const countriesRoutes = require('./routes/countries');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// get BASE_URL from .env
+const BASE_URL = process.env.BASE_URL;
+
 // Middleware
 app.use(cors({
-  origin: ['http://localhost:4200', 'http://127.0.0.1:4200'],
+  origin: process.env.NODE_ENV === 'production'
+    ? ['http://vunph.id.vn']
+    : ['http://localhost:4200', 'http://127.0.0.1:4200'],
   credentials: true
 }));
 app.use(express.json());

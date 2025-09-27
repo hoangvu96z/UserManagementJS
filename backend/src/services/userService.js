@@ -6,6 +6,10 @@ const User = require('../models/User');
 const USERS_FILE = path.join(__dirname, '../../data/users.json');
 
 class UserService {
+
+  async deleteAllUsers() {
+    await this.saveUsers([]);
+  }
   async getAllUsers() {
     try {
       const data = await fs.readFile(USERS_FILE, 'utf8');
