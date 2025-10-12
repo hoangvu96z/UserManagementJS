@@ -7,6 +7,8 @@ const cors = require('cors');
 const authRoutes = require('./routes/auth');
 const userRoutes = require('./routes/user');
 const countriesRoutes = require('./routes/countries');
+const emailRoutes = require('./routes/email');
+const postRoutes = require('./routes/posts');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -27,6 +29,8 @@ app.use(express.json());
 app.use('/api', authRoutes);
 app.use('/api/user', userRoutes);
 app.use('/api/countries', countriesRoutes);
+app.use('/api/email', emailRoutes);
+app.use('/api/posts', postRoutes);
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {

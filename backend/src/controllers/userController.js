@@ -54,6 +54,49 @@ const updateProfile = async (req, res) => {
   }
 };
 
+const changePassword = async (req, res) => {
+  try {
+    const { currentPassword, newPassword, confirmPassword } = req.body;
+    const userId = req.user.id;
+
+    if (!currentPassword || !newPassword || !confirmPassword) {
+      return res.status(400).json({ error: 'Current password, new password, and confirmation are required' });
+    }
+
+    if (newPassword !== confirmPassword) {
+      return res.status(400).json({ error: 'New password and confirmation do not match' });
+    }
+
+    if (newPassword.length < 8) {
+      return res.status(400).json({ error: 'New password must be at least 8 characters long' });
+    }
+
+    if (newPassword.length > 40) {
+      return res.status(400).json({ error: 'New password must be 40 characters or less' });
+    }
+
+    if (newPassword === currentPassword) {
+      return res.status(400).json({ error: 'New password must be different from the current password' });
+    }
+
+    const updatedUser = await userService.updatePassword(userId, currentPassword, newPassword);
+    if (req.user) {
+      req.user.password = updatedUser.password;
+    }
+
+    res.json({ message: 'Password updated successfully' });
+  } catch (error) {
+    if (error.message === 'Current password is incorrect') {
+      return res.status(400).json({ error: error.message });
+    }
+    if (error.message === 'User not found') {
+      return res.status(404).json({ error: error.message });
+    }
+    console.error('Change password error:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
 // WARNING: This API is for demo purposes only.
 const deleteAllUsers = async (req, res) => {
   try {
@@ -68,5 +111,6 @@ const deleteAllUsers = async (req, res) => {
 module.exports = {
   getProfile,
   updateProfile,
+  changePassword,
   deleteAllUsers
 };

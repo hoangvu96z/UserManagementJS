@@ -95,6 +95,28 @@ class UserService {
   async validatePassword(user, password) {
     return await bcrypt.compare(password, user.password);
   }
+
+  async updatePassword(userId, currentPassword, newPassword) {
+    const users = await this.getAllUsers();
+    const userIndex = users.findIndex(user => user.id === userId);
+
+    if (userIndex === -1) {
+      throw new Error('User not found');
+    }
+
+    const user = users[userIndex];
+    const isCurrentPasswordValid = await bcrypt.compare(currentPassword, user.password);
+
+    if (!isCurrentPasswordValid) {
+      throw new Error('Current password is incorrect');
+    }
+
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    users[userIndex].password = hashedPassword;
+    await this.saveUsers(users);
+
+    return users[userIndex];
+  }
 }
 
 module.exports = new UserService();
