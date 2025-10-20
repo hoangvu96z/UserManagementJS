@@ -1,19 +1,22 @@
 
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable, tap } from 'rxjs';
+import { Observable, tap } from 'rxjs';
+import { take } from 'rxjs/operators';
+import { Store } from '@ngrx/store';
 import { User, LoginRequest, RegisterRequest, AuthResponse } from '../models/user.model';
 import { environment } from '../../environments/environment';
+import { AuthActions } from '../store/auth/auth.actions';
+import { selectCurrentUser } from '../store/auth/auth.reducer';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
   private apiUrl = environment.apiUrl;
-  private currentUserSubject = new BehaviorSubject<User | null>(null);
-  public currentUser$ = this.currentUserSubject.asObservable();
+  public currentUser$ = this.store.select(selectCurrentUser);
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private store: Store) {
     if (this.isAuthenticated()) {
       this.loadCurrentUser();
     }
@@ -24,7 +27,7 @@ export class AuthService {
       .pipe(
         tap(response => {
           localStorage.setItem('token', response.token);
-          this.currentUserSubject.next(response.user);
+          this.store.dispatch(AuthActions.loginSuccess({ user: response.user }));
         })
       );
   }
@@ -34,36 +37,17 @@ export class AuthService {
       .pipe(
         tap(response => {
           localStorage.setItem('token', response.token);
-          this.currentUserSubject.next(response.user);
+          this.store.dispatch(AuthActions.registerSuccess({ user: response.user }));
         })
       );
   }
 
   logout(): Observable<any> {
-    return this.http.post(`${this.apiUrl}/logout`, {})
-      .pipe(
-        tap(() => {
-          console.log('User logged out');
-          
-          localStorage.removeItem('token');
-          this.currentUserSubject.next(null);
-        })
-      );
+    return this.http.post(`${this.apiUrl}/logout`, {});
   }
 
   public loadCurrentUser(): void {
-    this.http.get<User>(`${this.apiUrl}/user`)
-      .subscribe({
-        next: (user) => this.currentUserSubject.next(user),
-        error: (error) => {
-          console.log(error);
-          
-          console.log('Failed to load current user, logging out.');
-          
-          localStorage.removeItem('token');
-          this.currentUserSubject.next(null);
-        }
-      });
+    this.store.dispatch(AuthActions.loadCurrentUser());
   }
 
   isAuthenticated(): boolean {
@@ -71,7 +55,11 @@ export class AuthService {
   }
 
   getCurrentUser(): User | null {
-    return this.currentUserSubject.value;
+    let currentUser: User | null = null;
+    this.currentUser$
+      .pipe(take(1))
+      .subscribe((user) => (currentUser = user));
+    return currentUser;
   }
 
   getToken(): string | null {

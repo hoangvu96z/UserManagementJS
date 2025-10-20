@@ -1,8 +1,11 @@
-import { Component, OnInit } from '@angular/core';
-
-import { Router, RouterModule } from '@angular/router';
+import { Component, OnInit, inject } from '@angular/core';
+import { RouterModule } from '@angular/router';
+import { Store } from '@ngrx/store';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AuthService } from '../../services/auth.service';
 import { User } from '../../models/user.model';
+import { AuthActions } from '../../store/auth/auth.actions';
+import { selectCurrentUser } from '../../store/auth/auth.reducer';
 import { HeaderComponent } from '../header/header.component';
 import { FooterComponent } from '../footer/footer.component';
 
@@ -14,29 +17,24 @@ import { FooterComponent } from '../footer/footer.component';
 })
 export class DashboardComponent implements OnInit {
   currentUser: User | null = null;
-
-  constructor(
-    private authService: AuthService,
-    private router: Router
-  ) {}
+  private readonly store = inject(Store);
+  private readonly authService = inject(AuthService);
 
   ngOnInit(): void {
-    this.authService.currentUser$.subscribe(user => {
-      this.currentUser = user;
-    });
+    this.store
+      .select(selectCurrentUser)
+      .pipe(takeUntilDestroyed())
+      .subscribe((user) => {
+        this.currentUser = user;
+      });
+
+    if (this.authService.isAuthenticated()) {
+      this.store.dispatch(AuthActions.loadCurrentUser());
+    }
   }
 
   logout(): void {
-    this.authService.logout().subscribe({
-      next: () => {
-        this.router.navigate(['/login']);
-      },
-      error: () => {
-        console.log('Logout failed, clearing local session.');
-        localStorage.removeItem('token');
-        this.router.navigate(['/login']);
-      }
-    });
+    this.store.dispatch(AuthActions.logout());
   }
 
   formatDate(dateString: string | undefined): string {
