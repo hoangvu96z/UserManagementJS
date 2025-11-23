@@ -1,0 +1,144 @@
+<ion-page>
+  <ion-content class="ion-padding">
+    <app-toast
+      [show]="showToast"
+      [toastOption]="toastOption"
+      (click)="showToast = false">
+    </app-toast>
+
+    <ion-card>
+      <ion-card-header class="ion-text-center">
+        <ion-card-title>Create Account</ion-card-title>
+        <ion-text color="medium">Sign up to get started with your account</ion-text>
+      </ion-card-header>
+
+      <ion-card-content>
+        @if (errorMessage) {
+          <ion-item color="danger" lines="none" class="ion-margin-bottom">
+            <ion-text color="light">{{ errorMessage }}</ion-text>
+          </ion-item>
+        }
+
+        <form (ngSubmit)="onSubmit()" #registerForm="ngForm">
+          <ion-list lines="full">
+            <ion-item>
+              <ion-label position="stacked">Nickname *</ion-label>
+              <ion-input
+                id="nickname"
+                name="nickname"
+                type="text"
+                fill="outline"
+                [(ngModel)]="userData.nickname"
+                placeholder="Enter your nickname"
+                required
+                maxlength="40"
+                #nickname="ngModel"
+              ></ion-input>
+            </ion-item>
+            @if (nickname.invalid && nickname.touched) {
+              <ion-text color="danger" class="ion-padding-start">Nickname is required (max 40 characters)</ion-text>
+            }
+
+            <ion-item>
+              <ion-label position="stacked">Email *</ion-label>
+              <ion-input
+                id="email"
+                name="email"
+                type="email"
+                fill="outline"
+                [(ngModel)]="userData.email"
+                placeholder="Enter your email"
+                required
+                maxlength="40"
+                pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$"
+                #email="ngModel"
+              ></ion-input>
+            </ion-item>
+            @if (email.invalid && email.touched) {
+              <ion-text color="danger" class="ion-padding-start">Valid email is required (max 40 characters)</ion-text>
+            }
+
+            <ion-item>
+              <ion-label position="stacked">Phone *</ion-label>
+              <ion-input
+                id="phone"
+                name="phone"
+                type="tel"
+                fill="outline"
+                [(ngModel)]="userData.phone"
+                placeholder="Enter your phone number"
+                required
+                pattern="[0-9]{10,15}"
+                #phone="ngModel"
+              ></ion-input>
+            </ion-item>
+            @if (phone.invalid && phone.touched) {
+              <ion-text color="danger" class="ion-padding-start">Valid phone number is required (10-15 digits)</ion-text>
+            }
+
+            <ion-item lines="none" class="ion-padding-bottom">
+              <ion-label position="stacked">Country *</ion-label>
+              <app-autocomplete
+                [items]="countries"
+                name="country"
+                placeholder="Start typing to search your country"
+                [(ngModel)]="userData.country">
+              </app-autocomplete>
+            </ion-item>
+
+            <ion-item>
+              <ion-label position="stacked">Password *</ion-label>
+              <ion-input
+                id="password"
+                name="password"
+                type="password"
+                fill="outline"
+                [(ngModel)]="userData.password"
+                placeholder="Enter your password"
+                required
+                maxlength="40"
+                #password="ngModel"
+              ></ion-input>
+            </ion-item>
+            @if (password.invalid && password.touched) {
+              <ion-text color="danger" class="ion-padding-start">Password is required (max 40 characters)</ion-text>
+            }
+
+            <ion-item>
+              <ion-label position="stacked">Confirm Password *</ion-label>
+              <ion-input
+                id="confirmPassword"
+                name="confirmPassword"
+                type="password"
+                fill="outline"
+                [(ngModel)]="userData.confirmPassword"
+                placeholder="Confirm your password"
+                required
+                #confirmPassword="ngModel"
+              ></ion-input>
+            </ion-item>
+            @if (confirmPassword.invalid && confirmPassword.touched) {
+              <ion-text color="danger" class="ion-padding-start">Password confirmation is required</ion-text>
+            }
+            @if (userData.password !== userData.confirmPassword && confirmPassword.touched) {
+              <ion-text color="danger" class="ion-padding-start">Passwords do not match</ion-text>
+            }
+          </ion-list>
+
+          <ion-button
+            expand="block"
+            type="submit"
+            [disabled]="registerForm.invalid || userData.password !== userData.confirmPassword || isLoading"
+          >
+            {{ isLoading ? 'Creating Account...' : 'Create Account' }}
+          </ion-button>
+        </form>
+
+        <div class="ion-text-center ion-margin-top">
+          <ion-text color="medium">Already have an account?</ion-text>
+          <ion-button fill="clear" routerLink="/login">Sign in here</ion-button>
+        </div>
+      </ion-card-content>
+    </ion-card>
+  </ion-content>
+</ion-page>

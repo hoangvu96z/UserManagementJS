@@ -55,3 +55,9 @@ frontend/.angular/
 frontend/.angular/cache/
 frontend/dist/
 frontend/out-tsc/
+frontend-mobile/node_modules/
+frontend-mobile/.angular/
+frontend-mobile/.angular/cache/
+frontend-mobile/dist/
+frontend-mobile/out-tsc/
+frontend-mobile/www/
