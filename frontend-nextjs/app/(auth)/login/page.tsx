@@ -26,11 +26,33 @@ export default function LoginPage() {
     event.preventDefault();
     setErrorMessage('');
     try {
-      await login(credentials);
+      // Wait for the login function and check return value (token, success boolean, or user object)
+      const result = await login(credentials);
+
+      // Normalize detection of success across possible return shapes
+      const isSuccess =
+        result === true ||
+        (result && typeof result === 'object' && (result.token || result.user || result.success));
+
+      if (!isSuccess) {
+        throw new Error('Login failed. Please check your credentials.');
+      }
+
       setToastType('success');
       setToastMessage('Login successful!');
       setShowToast(true);
-      setTimeout(() => router.push('/dashboard'), 800);
+
+      // Prefer router.replace for navigation (no backward history). Immediate navigation avoids timing issues.
+      try {
+        router.replace('/dashboard');
+      } catch (navErr) {
+        // Fallback if router navigation fails for some reason.
+        try {
+          window.location.assign('/dashboard');
+        } catch {
+          // ignore fallback errors
+        }
+      }
     } catch (error: any) {
       setToastType('danger');
       setToastMessage('Login failed. Please try again.');

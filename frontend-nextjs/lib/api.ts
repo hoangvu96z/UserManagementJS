@@ -1,4 +1,4 @@
-export const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://vunph.id.vn/api';
+export const API_URL = '/api';
 
 type HttpMethod = 'GET' | 'POST' | 'PUT';
 
