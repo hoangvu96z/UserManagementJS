@@ -61,3 +61,6 @@ frontend-mobile/.angular/cache/
 frontend-mobile/dist/
 frontend-mobile/out-tsc/
 frontend-mobile/www/
+# NestJS
+frontend-nestjs/node_modules/
+frontend-nestjs/.angular/
