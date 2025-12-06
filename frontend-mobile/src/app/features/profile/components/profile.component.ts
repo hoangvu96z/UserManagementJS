@@ -2,12 +2,11 @@ import { Component, inject, OnInit } from '@angular/core';
 
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
-import { AuthService } from '../../services/auth.service';
-import { UserService } from '../../services/user.service';
-import { User, UpdateUserRequest, Country } from '../../models/user.model';
-import { HeaderComponent } from '../header/header.component';
-import { AutocompleteComponent } from 'src/app/shared/autocomplete/autocomplete.component';
-import { FooterComponent } from '../footer/footer.component';
+import { AuthService } from '../../../core/services/auth.service';
+import { UserService } from '../../../core/services/user.service';
+import { User, UpdateUserRequest, Country } from '../../../core/models/user.model';
+import { HeaderComponent, FooterComponent } from '../../../layout';
+import { AutocompleteComponent } from 'src/app/shared/components/autocomplete/autocomplete.component';
 import {
   IonButton,
   IonCard,
@@ -131,7 +130,6 @@ export class ProfileComponent implements OnInit {
       },
       error: () => {
         console.log('Logout failed, clearing local session.');
-        
         localStorage.removeItem('token');
         this.router.navigate(['/login']);
       }

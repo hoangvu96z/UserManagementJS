@@ -1,10 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 
 import { Router, RouterModule } from '@angular/router';
-import { AuthService } from '../../services/auth.service';
-import { User } from '../../models/user.model';
-import { HeaderComponent } from '../header/header.component';
-import { FooterComponent } from '../footer/footer.component';
+import { AuthService } from '../../../core/services/auth.service';
+import { User } from '../../../core/models/user.model';
+import { HeaderComponent, FooterComponent } from '../../../layout';
 import {
   IonButton,
   IonCard,

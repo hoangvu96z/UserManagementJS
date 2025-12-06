@@ -1,14 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 
-import { AutocompleteComponent } from '../../shared/autocomplete/autocomplete.component';
-import { ToastComponent } from '../../shared/toast/toast.component';
+import { AutocompleteComponent } from '../../../shared/components/autocomplete/autocomplete.component';
+import { ToastComponent } from '../../../shared/components/toast/toast.component';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
-import { AuthService } from '../../services/auth.service';
-import { UserService } from '../../services/user.service';
-import { RegisterRequest, Country } from '../../models/user.model';
-import { APP_CONSTANT, MESSAGE_CONSTANT } from 'src/app/constant/app-constant';
-import { ToastOption } from 'src/app/shared/toast/toast-option.model';
+import { AuthService } from '../../../core/services/auth.service';
+import { UserService } from '../../../core/services/user.service';
+import { RegisterRequest, Country } from '../../../core/models/user.model';
+import { APP_CONSTANT, MESSAGE_CONSTANT } from 'src/app/config/app-constant';
+import { ToastOption } from 'src/app/shared/components/toast/toast-option.model';
 import {
   IonButton,
   IonCard,

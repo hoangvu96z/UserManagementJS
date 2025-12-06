@@ -2,11 +2,11 @@ import { Component, inject, OnInit } from '@angular/core';
 
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
-import { AuthService } from '../../services/auth.service';
-import { LoginRequest } from '../../models/user.model';
-import { ToastComponent } from 'src/app/shared';
-import { APP_CONSTANT, MESSAGE_CONSTANT } from 'src/app/constant/app-constant';
-import { ToastOption } from 'src/app/shared/toast/toast-option.model';
+import { AuthService } from '../../../core/services/auth.service';
+import { LoginRequest } from '../../../core/models/user.model';
+import { ToastComponent } from 'src/app/shared/components/toast/toast.component';
+import { APP_CONSTANT, MESSAGE_CONSTANT } from 'src/app/config/app-constant';
+import { ToastOption } from 'src/app/shared/components/toast/toast-option.model';
 import {
   IonButton,
   IonCard,

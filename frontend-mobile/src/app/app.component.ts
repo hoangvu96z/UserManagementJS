@@ -1,8 +1,8 @@
 
 import { Component } from '@angular/core';
-import { LoadingPopupComponent } from './shared/loading-popup.component';
+import { LoadingPopupComponent } from './shared/components/loading-popup.component';
 import { CommonModule } from '@angular/common';
-import { LoadingService } from './shared/loading.service';
+import { LoadingService } from './shared/services/loading.service';
 import { IonApp, IonRouterOutlet } from '@ionic/angular/standalone';
 
 @Component({
