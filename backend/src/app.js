@@ -20,7 +20,7 @@ const BASE_URL = process.env.BASE_URL;
 app.use(cors({
   origin: process.env.NODE_ENV === 'production'
     ? ['http://vunph.id.vn']
-    : ['http://localhost:4200', 'http://127.0.0.1:4200'],
+    : ['http://localhost:4200', 'http://127.0.0.1:4200', 'http://localhost:8100', 'http://127.0.0.1:8100'],
   credentials: true
 }));
 app.use(express.json());

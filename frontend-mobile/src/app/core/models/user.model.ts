@@ -29,6 +29,7 @@ export interface UpdateUserRequest {
 }
 
 export interface AuthResponse {
+  message?: string;
   token: string;
   user: User;
 }
