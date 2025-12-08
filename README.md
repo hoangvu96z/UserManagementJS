@@ -2,7 +2,6 @@
 # User Management System
 
 This is a Single Page Application (SPA) built with Angular (frontend) and Node.js/Express (backend).
-This project use for CODIX Interview test
 It was made by VU NGUYEN  | Email : hoangvu96z@gmail.com
 
 

@@ -1,0 +1,32 @@
+body {
+  min-height: 100vh;
+  padding: 20px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background-attachment: fixed;
+}
+
+.nav-link {
+  cursor: pointer;
+}
+
+.card {
+  border: none;
+}
+
+.dashboard-card {
+  border: 1px solid #e9ecef;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+}
+
+.info-item {
+  background: #f8f9fa;
+  padding: 12px;
+  border-radius: 8px;
+}

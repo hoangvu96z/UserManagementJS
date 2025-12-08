@@ -1,0 +1,6 @@
+<ion-buttons>
+  <ion-text color="medium" class="ion-margin-end">Welcome, {{ currentUser?.nickname }}</ion-text>
+  <ion-button routerLink="/dashboard" fill="clear">Home</ion-button>
+  <ion-button routerLink="/profile" fill="clear">Profile Settings</ion-button>
+  <ion-button color="medium" fill="outline" (click)="logout()">Sign Out</ion-button>
+</ion-buttons>
