@@ -55,12 +55,13 @@ frontend/.angular/
 frontend/.angular/cache/
 frontend/dist/
 frontend/out-tsc/
+#Mobile Angular modules
 frontend-mobile/node_modules/
 frontend-mobile/.angular/
 frontend-mobile/.angular/cache/
 frontend-mobile/dist/
 frontend-mobile/out-tsc/
 frontend-mobile/www/
-# NestJS
-frontend-nestjs/node_modules/
-frontend-nestjs/.angular/
+#NestJs modules
+frontend-nextjs/node_modules/
+frontend-nextjs/.angular/
