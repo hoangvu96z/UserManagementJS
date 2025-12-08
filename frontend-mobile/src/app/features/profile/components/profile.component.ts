@@ -1,0 +1,148 @@
+import { Component, inject, OnInit } from '@angular/core';
+
+import { FormsModule } from '@angular/forms';
+import { Router, RouterModule } from '@angular/router';
+import { AuthService } from '../../../core/services/auth.service';
+import { UserService } from '../../../core/services/user.service';
+import { User, UpdateUserRequest, Country } from '../../../core/models/user.model';
+import { HeaderComponent, FooterComponent } from '../../../layout';
+import { AutocompleteComponent } from 'src/app/shared/components/autocomplete/autocomplete.component';
+import {
+  IonButton,
+  IonCard,
+  IonCardContent,
+  IonCardHeader,
+  IonCardTitle,
+  IonCol,
+  IonContent,
+  IonGrid,
+  IonHeader,
+  IonInput,
+  IonItem,
+  IonLabel,
+  IonNote,
+  IonRow,
+  IonText,
+  IonTitle,
+  IonToolbar
+} from '@ionic/angular/standalone';
+
+@Component({
+  selector: 'app-profile',
+  imports: [
+    FormsModule,
+    RouterModule,
+    HeaderComponent,
+    FooterComponent,
+    AutocompleteComponent,
+    IonHeader,
+    IonToolbar,
+    IonTitle,
+    IonContent,
+    IonCard,
+    IonCardHeader,
+    IonCardTitle,
+    IonCardContent,
+    IonText,
+    IonGrid,
+    IonRow,
+    IonCol,
+    IonItem,
+    IonLabel,
+    IonInput,
+    IonButton,
+    IonNote
+  ],
+  templateUrl: './profile.component.html',
+  styles: []
+})
+export class ProfileComponent implements OnInit {
+  currentUser: User | null = null;
+  countries: Country[] = [];
+  updateData: UpdateUserRequest = {
+    nickname: '',
+    phone: '',
+    country: ''
+  };
+  
+  successMessage = '';
+  errorMessage = '';
+  isLoading = false;
+  private readonly authService: AuthService = inject(AuthService);
+  private readonly userService: UserService = inject(UserService);
+  private readonly router: Router = inject(Router);
+
+  constructor() {}
+
+  ngOnInit(): void {
+    this.authService.currentUser$.subscribe(user => {
+      this.currentUser = user;
+      if (user) {
+        this.updateData = {
+          nickname: user.nickname,
+          phone: user.phone,
+          country: user.country
+        };
+      }
+    });
+
+    this.loadCountries();
+  }
+
+  loadCountries(): void {
+    this.userService.getCountries().subscribe({
+      next: (countries: any) => {
+        this.countries = countries.map((country: string) => ({
+          name: country,
+          code: country
+        }));
+      },
+      error: (error) => {
+        console.error('Failed to load countries:', error);
+      }
+    });
+  }
+
+  onSubmit(): void {
+    if (this.isLoading) return;
+
+    this.isLoading = true;
+    this.errorMessage = '';
+    this.successMessage = '';
+
+    this.userService.updateUser(this.updateData).subscribe({
+      next: () => {
+        this.successMessage = 'Profile updated successfully!';
+        this.authService.loadCurrentUser?.();
+        this.isLoading = false;
+      },
+      error: (error) => {
+        this.errorMessage = error.error?.message || 'Failed to update profile. Please try again.';
+        this.isLoading = false;
+      }
+    });
+  }
+
+  logout(): void {
+    this.authService.logout().subscribe({
+      next: () => {
+        this.router.navigate(['/login']);
+      },
+      error: () => {
+        console.log('Logout failed, clearing local session.');
+        localStorage.removeItem('token');
+        this.router.navigate(['/login']);
+      }
+    });
+  }
+
+  formatDate(dateString: string | undefined): string {
+    if (!dateString) return '';
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+  }
+}
