@@ -6,8 +6,9 @@
   "scripts": {
     "install:all": "cd backend && npm install && cd ../frontend && npm install",
     "start:backend": "cd backend && npm run dev",
-    "start:frontend": "cd frontend && npm run dev",
-    "build:frontend": "cd frontend && npm run build",
+    "start:ui": "cd frontend && npm run start",
+    "build:ui": "cd frontend && npm run build",
+    "test:ui": "cd frontend && npm run test",
     "dev": "npm run start:frontend",
     "test": "echo \"No tests specified\" && exit 0"
   },

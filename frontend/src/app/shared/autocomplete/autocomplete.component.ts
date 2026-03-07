@@ -1,5 +1,5 @@
 import { Component, Input, forwardRef } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormsModule, ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 export interface AutocompleteItem {
@@ -10,7 +10,7 @@ export interface AutocompleteItem {
 @Component({
   selector: 'app-autocomplete',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [FormsModule],
   template: `
     <div class="position-relative">
       <input
@@ -24,19 +24,25 @@ export interface AutocompleteItem {
         (keydown)="onKeydown($event)"
         [disabled]="disabled"
         autocomplete="off"
-      />
-      <div *ngIf="showList" class="dropdown-menu show w-100 mt-1 p-0" style="max-height:220px;overflow-y:auto;">
-        <div *ngIf="filtered.length === 0" class="dropdown-item text-muted">No matches</div>
-        <button type="button" *ngFor="let it of filtered; let i = index"
-                class="dropdown-item" [class.active]="i === highlightedIndex"
-                role="option"
-                (mousedown)="select(it)"
-                (mouseover)="highlightedIndex = i">
-          {{ it.name }}
-        </button>
-      </div>
+        />
+      @if (showList) {
+        <div class="dropdown-menu show w-100 mt-1 p-0" style="max-height:220px;overflow-y:auto;">
+          @if (filtered.length === 0) {
+            <div class="dropdown-item text-muted">No matches</div>
+          }
+          @for (it of filtered; track it; let i = $index) {
+            <button type="button"
+              class="dropdown-item" [class.active]="i === highlightedIndex"
+              role="option"
+              (mousedown)="select(it)"
+              (mouseover)="highlightedIndex = i">
+              {{ it.name }}
+            </button>
+          }
+        </div>
+      }
     </div>
-  `,
+    `,
   styles: [
     ``
   ],

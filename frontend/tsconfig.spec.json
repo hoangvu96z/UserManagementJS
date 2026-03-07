@@ -3,7 +3,9 @@
   "compilerOptions": {
     "outDir": "./out-tsc/spec",
     "types": [
-      "jasmine"
+      "jasmine",
+      "vitest/globals",
+      "@testing-library/jest-dom"
     ]
   },
   "include": [
