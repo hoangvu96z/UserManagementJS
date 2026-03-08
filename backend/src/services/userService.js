@@ -1,50 +1,48 @@
-const fs = require('fs').promises;
-const path = require('path');
 const bcrypt = require('bcryptjs');
 const User = require('../models/User');
-
-const USERS_FILE = path.join(__dirname, '../../data/users.json');
+const pool = require('../config/db');
 
 class UserService {
+  mapRowToUser(row) {
+    return new User({
+      id: row.id,
+      nickname: row.nickname,
+      email: row.email,
+      password: row.password,
+      phone: row.phone,
+      country: row.country,
+      role: row.role,
+      createdAt: row.created_at
+    });
+  }
 
   async deleteAllUsers() {
-    await this.saveUsers([]);
-  }
-  async getAllUsers() {
-    try {
-      const data = await fs.readFile(USERS_FILE, 'utf8');
-      return JSON.parse(data);
-    } catch (error) {
-      if (error.code === 'ENOENT') {
-        return [];
-      }
-      throw error;
-    }
+    await pool.query('DELETE FROM users');
   }
 
-  async saveUsers(users) {
-    await fs.writeFile(USERS_FILE, JSON.stringify(users, null, 2));
+  async getAllUsers() {
+    const [rows] = await pool.query('SELECT * FROM users');
+    return rows.map(row => this.mapRowToUser(row));
   }
 
   async findUserByEmail(email) {
-    const users = await this.getAllUsers();
-    return users.find(user => user.email === email);
+    const [rows] = await pool.query('SELECT * FROM users WHERE email = ? LIMIT 1', [email]);
+    return rows[0] ? this.mapRowToUser(rows[0]) : null;
   }
 
   async findUserByNickname(nickname) {
-    const users = await this.getAllUsers();
-    return users.find(user => user.nickname === nickname);
+    const [rows] = await pool.query('SELECT * FROM users WHERE nickname = ? LIMIT 1', [nickname]);
+    return rows[0] ? this.mapRowToUser(rows[0]) : null;
   }
 
   async findUserById(id) {
-    const users = await this.getAllUsers();
-    return users.find(user => user.id === id);
+    const [rows] = await pool.query('SELECT * FROM users WHERE id = ? LIMIT 1', [id]);
+    return rows[0] ? this.mapRowToUser(rows[0]) : null;
   }
 
   async createUser(userData) {
-    const { nickname, email, password, phone, country } = userData;
-    
-    // Check if user already exists
+    const { nickname, email, password, phone, country, role = 'user' } = userData;
+
     const existingUserByEmail = await this.findUserByEmail(email);
     if (existingUserByEmail) {
       throw new Error('Email already exists');
@@ -55,41 +53,50 @@ class UserService {
       throw new Error('Nickname already exists');
     }
 
-    // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Create new user
-    const newUser = new User(nickname, email, hashedPassword, phone, country);
+    const [result] = await pool.query(
+      'INSERT INTO users (nickname, email, password, phone, country, role) VALUES (?, ?, ?, ?, ?, ?)',
+      [nickname, email, hashedPassword, phone, country, role]
+    );
 
-    // Save to file
-    const users = await this.getAllUsers();
-    users.push(newUser.toDatabase());
-    await this.saveUsers(users);
-
-    return newUser;
+    return new User({
+      id: result.insertId,
+      nickname,
+      email,
+      password: hashedPassword,
+      phone,
+      country,
+      role,
+      createdAt: new Date().toISOString()
+    });
   }
 
   async updateUser(userId, updateData) {
-    const users = await this.getAllUsers();
-    const userIndex = users.findIndex(user => user.id === userId);
-    
-    if (userIndex === -1) {
+    const existingUser = await this.findUserById(userId);
+
+    if (!existingUser) {
       throw new Error('User not found');
     }
 
-    // Check nickname uniqueness if it's being updated
-    if (updateData.nickname && updateData.nickname !== users[userIndex].nickname) {
-      const existingUser = await this.findUserByNickname(updateData.nickname);
-      if (existingUser && existingUser.id !== userId) {
+    if (updateData.nickname && updateData.nickname !== existingUser.nickname) {
+      const userWithNickname = await this.findUserByNickname(updateData.nickname);
+      if (userWithNickname && userWithNickname.id !== userId) {
         throw new Error('Nickname already exists');
       }
     }
 
-    // Update user data
-    users[userIndex] = { ...users[userIndex], ...updateData };
-    await this.saveUsers(users);
+    const nickname = updateData.nickname || existingUser.nickname;
+    const phone = updateData.phone || existingUser.phone;
+    const country = updateData.country || existingUser.country;
+    const role = updateData.role || existingUser.role;
 
-    return users[userIndex];
+    await pool.query(
+      'UPDATE users SET nickname = ?, phone = ?, country = ?, role = ? WHERE id = ?',
+      [nickname, phone, country, role, userId]
+    );
+
+    return this.findUserById(userId);
   }
 
   async validatePassword(user, password) {
@@ -97,14 +104,12 @@ class UserService {
   }
 
   async updatePassword(userId, currentPassword, newPassword) {
-    const users = await this.getAllUsers();
-    const userIndex = users.findIndex(user => user.id === userId);
+    const user = await this.findUserById(userId);
 
-    if (userIndex === -1) {
+    if (!user) {
       throw new Error('User not found');
     }
 
-    const user = users[userIndex];
     const isCurrentPasswordValid = await bcrypt.compare(currentPassword, user.password);
 
     if (!isCurrentPasswordValid) {
@@ -112,10 +117,9 @@ class UserService {
     }
 
     const hashedPassword = await bcrypt.hash(newPassword, 10);
-    users[userIndex].password = hashedPassword;
-    await this.saveUsers(users);
+    await pool.query('UPDATE users SET password = ? WHERE id = ?', [hashedPassword, userId]);
 
-    return users[userIndex];
+    return this.findUserById(userId);
   }
 }
 

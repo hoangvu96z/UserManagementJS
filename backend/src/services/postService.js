@@ -1,76 +1,73 @@
-const fs = require('fs').promises;
-const path = require('path');
 const Post = require('../models/Post');
-
-const POSTS_FILE = path.join(__dirname, '../../data/posts.json');
+const pool = require('../config/db');
 
 class PostService {
-  async getAllPosts() {
-    try {
-      const data = await fs.readFile(POSTS_FILE, 'utf8');
-      return JSON.parse(data);
-    } catch (error) {
-      if (error.code === 'ENOENT') {
-        return [];
-      }
-      throw error;
-    }
+  mapRowToPost(row) {
+    return new Post({
+      id: row.id,
+      title: row.title,
+      content: row.content,
+      authorId: row.author_id,
+      createdAt: row.created_at,
+      updatedAt: row.updated_at
+    });
   }
 
-  async savePosts(posts) {
-    await fs.writeFile(POSTS_FILE, JSON.stringify(posts, null, 2));
+  async getAllPosts() {
+    const [rows] = await pool.query('SELECT * FROM posts');
+    return rows.map(row => this.mapRowToPost(row));
   }
 
   async findPostById(postId) {
-    const posts = await this.getAllPosts();
-    return posts.find(post => post.id === postId);
+    const [rows] = await pool.query('SELECT * FROM posts WHERE id = ? LIMIT 1', [postId]);
+    return rows[0] ? this.mapRowToPost(rows[0]) : null;
   }
 
   async createPost(postData) {
-    const post = new Post(postData);
-    const posts = await this.getAllPosts();
-    posts.push(post.toDatabase());
-    await this.savePosts(posts);
-    return post.toJSON();
+    const { title, content, authorId } = postData;
+    const [result] = await pool.query(
+      'INSERT INTO posts (title, content, author_id) VALUES (?, ?, ?)',
+      [title, content, authorId]
+    );
+
+    return this.findPostById(result.insertId);
   }
 
   async updatePost(postId, authorId, updateData) {
-    const posts = await this.getAllPosts();
-    const index = posts.findIndex(post => post.id === postId);
+    const existingPost = await this.findPostById(postId);
 
-    if (index === -1) {
+    if (!existingPost) {
       throw new Error('Post not found');
     }
 
-    if (posts[index].authorId !== authorId) {
+    if (existingPost.authorId !== authorId) {
       throw new Error('You do not have permission to modify this post');
     }
 
-    posts[index] = {
-      ...posts[index],
-      ...updateData,
-      updatedAt: new Date().toISOString()
-    };
+    const title = updateData.title || existingPost.title;
+    const content = updateData.content || existingPost.content;
 
-    await this.savePosts(posts);
-    return posts[index];
+    await pool.query(
+      'UPDATE posts SET title = ?, content = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?',
+      [title, content, postId]
+    );
+
+    return this.findPostById(postId);
   }
 
   async deletePost(postId, authorId) {
-    const posts = await this.getAllPosts();
-    const index = posts.findIndex(post => post.id === postId);
+    const existingPost = await this.findPostById(postId);
 
-    if (index === -1) {
+    if (!existingPost) {
       throw new Error('Post not found');
     }
 
-    if (posts[index].authorId !== authorId) {
+    if (existingPost.authorId !== authorId) {
       throw new Error('You do not have permission to delete this post');
     }
 
-    const [deletedPost] = posts.splice(index, 1);
-    await this.savePosts(posts);
-    return deletedPost;
+    await pool.query('DELETE FROM posts WHERE id = ?', [postId]);
+    return existingPost;
   }
 }
 
