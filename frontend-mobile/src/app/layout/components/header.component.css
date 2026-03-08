@@ -1,0 +1,16 @@
+.d-flex {
+  display: flex;
+}
+.align-items-center {
+  align-items: center;
+}
+.ms-auto {
+  margin-left: auto;
+}
+.gap-3 {
+  gap: 1rem;
+}
+
+.nav-link.active, .nav-link.font-weight-bold {
+  font-weight: bold;
+}

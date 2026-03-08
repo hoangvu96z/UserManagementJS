@@ -1,0 +1,86 @@
+
+
+  <ion-content class="ion-padding">
+    <app-toast
+      [show]="showToast"
+      [toastOption]="toastOption"
+      (click)="showToast = false">
+    </app-toast>
+
+    <ion-card>
+      <ion-card-header class="ion-text-center">
+        <ion-card-title>Welcome Back</ion-card-title>
+        <ion-text color="medium">Sign in to your account to continue</ion-text>
+      </ion-card-header>
+
+      <ion-card-content>
+        @if (errorMessage) {
+          <ion-item color="danger" lines="none" class="ion-margin-bottom">
+            <ion-text color="light">{{ errorMessage }}</ion-text>
+          </ion-item>
+        }
+
+        <form (ngSubmit)="onSubmit()" #loginForm="ngForm">
+          <ion-list lines="full">
+            <ion-item>
+              <ion-label position="stacked">Username or Email</ion-label>
+              <ion-input
+                id="username"
+                name="username"
+                type="text"
+                fill="outline"
+                [(ngModel)]="credentials.username"
+                placeholder="Enter your username or email"
+                required
+                #username="ngModel"
+              ></ion-input>
+            </ion-item>
+            @if (username.invalid && username.touched) {
+              <ion-text color="danger" class="ion-padding-start">Username or email is required</ion-text>
+            }
+
+            <ion-item>
+              <ion-label position="stacked">Password</ion-label>
+              <ion-input
+                id="password"
+                name="password"
+                type="password"
+                fill="outline"
+                [(ngModel)]="credentials.password"
+                placeholder="Enter your password"
+                required
+                #password="ngModel"
+              ></ion-input>
+            </ion-item>
+            @if (password.invalid && password.touched) {
+              <ion-text color="danger" class="ion-padding-start">Password is required</ion-text>
+            }
+
+            <ion-item lines="none">
+              <ion-checkbox
+                id="rememberMe"
+                name="rememberMe"
+                [(ngModel)]="credentials.rememberMe"
+                justify="start"
+                labelPlacement="end"
+              >Remember me</ion-checkbox>
+            </ion-item>
+          </ion-list>
+
+          <ion-button
+            expand="block"
+            type="submit"
+            [disabled]="loginForm.invalid || isLoading"
+          >
+            {{ isLoading ? 'Signing in...' : 'Sign In' }}
+          </ion-button>
+        </form>
+
+        <div class="ion-text-center ion-margin-top">
+          <ion-text color="medium">Don't have an account?</ion-text>
+          <ion-button fill="clear" routerLink="/register">Sign up here</ion-button>
+        </div>
+      </ion-card-content>
+    </ion-card>
+  </ion-content>
+
